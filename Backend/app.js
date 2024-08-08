@@ -70,6 +70,7 @@ mongoose
     `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@cluster0.ufoahrq.mongodb.net/messages?retryWrites=true&w=majority&appName=Cluster0`
   )
   .then((result) => {
+    console.log(process.env.PORT)
     const server = app.listen(process.env.PORT ||8080);
     const io = require("./socket").init(server);
     io.on("connect", (socket) => {
