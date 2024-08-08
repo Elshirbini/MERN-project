@@ -4,7 +4,7 @@ module.exports = {
     init : httpServer => {
         io = require('socket.io')(httpServer , {
             cors: {
-              origin: "https://mern-project-sage-psi.vercel.app",
+              origin: "*",
             },
           })
         return io;
