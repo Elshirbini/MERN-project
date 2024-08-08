@@ -4,7 +4,7 @@ const bodyParser = require("body-parser");
 const multer = require("multer");
 const mongoose = require("mongoose");
 const cors = require("cors");
-const compression = require('compression');
+const compression = require("compression");
 const feedRoutes = require("./routes/feed");
 const authRoutes = require("./routes/auth");
 
@@ -46,10 +46,12 @@ app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
   next();
 });
-app.use(cors({
-  origin : ["https://mern-project-api-orcin.vercel.app"],
-  credentials : true
-}));
+app.use(
+  cors({
+    origin: ["https://mern-project-sage-psi.vercel.app"],
+    credentials: true,
+  })
+);
 app.use(compression());
 
 app.use("/feed", feedRoutes);
@@ -68,11 +70,11 @@ mongoose
     `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@cluster0.ufoahrq.mongodb.net/messages?retryWrites=true&w=majority&appName=Cluster0`
   )
   .then((result) => {
-    const server = app.listen(process.env.PORT ||8080);
+    console.log(process.env.PORT);
+    const server = app.listen(process.env.PORT || 8080);
     const io = require("./socket").init(server);
     io.on("connect", (socket) => {
       console.log("Client Connected");
     });
   })
   .catch((err) => console.log(err));
-
