@@ -46,12 +46,7 @@ app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
   next();
 });
-app.use(
-  cors({
-    origin: ["https://mern-project-sage-psi.vercel.app"],
-    credentials: true,
-  })
-);
+app.use(cors());
 app.use(compression());
 
 app.use("/feed", feedRoutes);
@@ -70,8 +65,7 @@ mongoose
     `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@cluster0.ufoahrq.mongodb.net/messages?retryWrites=true&w=majority&appName=Cluster0`
   )
   .then((result) => {
-    console.log(process.env.PORT);
-    const server = app.listen(process.env.PORT || 8080);
+    const server = app.listen(process.env.PORT ||8080);
     const io = require("./socket").init(server);
     io.on("connect", (socket) => {
       console.log("Client Connected");
