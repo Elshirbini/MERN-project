@@ -46,7 +46,10 @@ app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
   next();
 });
-app.use(cors());
+app.use(cors({
+  origin : ["https://mern-project-api-orcin.vercel.app"],
+  credentials : true
+}));
 app.use(compression());
 
 app.use("/feed", feedRoutes);
