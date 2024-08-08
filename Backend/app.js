@@ -47,7 +47,7 @@ app.use((req, res, next) => {
   next();
 });
 app.use(cors({
-  origin : ["https://mern-project-api-orcin.vercel.app"],
+  origin : ["https://mern-project-sage-psi.vercel.app/"],
   methods : ["OPTIONS, GET, POST, PUT, PATCH, DELETE"],
   credentials : true
 }
