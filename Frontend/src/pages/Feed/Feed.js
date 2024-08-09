@@ -35,7 +35,8 @@ class Feed extends Component {
       .catch(this.catchError);
 
     this.loadPosts();
-    const socket = openSocket("https://mern-project-api-orcin.vercel.app");
+    // const socket = openSocket("https://mern-project-api-orcin.vercel.app");
+    const socket = openSocket("http://localhost:8080");
     socket.on("posts", (data) => {
       if (data.action === "create") {
         this.addPost(data.post);
@@ -91,7 +92,8 @@ class Feed extends Component {
       page--;
       this.setState({ postPage: page });
     }
-    fetch("https://mern-project-api-orcin.vercel.app/feed/posts?page=" + page, {
+    // fetch("https://mern-project-api-orcin.vercel.app/feed/posts?page=" + page, {
+    fetch("http://localhost:8080/feed/posts?page=" + page, {
       headers: {
         Authorization: "Bearer " + this.props.token,
       },
@@ -160,10 +162,12 @@ class Feed extends Component {
     formData.append("title", postData.title);
     formData.append("content", postData.content);
     formData.append("image", postData.image);
-    let url = "https://mern-project-api-orcin.vercel.app/feed/post";
+    // let url = "https://mern-project-api-orcin.vercel.app/feed/post";
+    let url = "http://localhost:8080/feed/post";
     let method = "POST";
     if (this.state.editPost) {
-      url = "https://mern-project-api-orcin.vercel.app/feed/post/" + this.state.editPost._id;
+      // url = "https://mern-project-api-orcin.vercel.app/feed/post/" + this.state.editPost._id;
+      url = "http://localhost:8080/feed/post/" + this.state.editPost._id;
       method = "PUT";
     }
 
@@ -213,7 +217,8 @@ class Feed extends Component {
 
   deletePostHandler = (postId) => {
     this.setState({ postsLoading: true });
-    fetch("https://mern-project-api-orcin.vercel.app/feed/post/" + postId, {
+    // fetch("https://mern-project-api-orcin.vercel.app/feed/post/" + postId, {
+    fetch("http://localhost:8080/feed/post/" + postId, {
       method: "DELETE",
       headers: {
         Authorization: "Bearer " + this.props.token,

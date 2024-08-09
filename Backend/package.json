@@ -11,13 +11,17 @@
     "multer": "^1.4.5-lts.1",
     "socket.io": "^4.7.5"
   },
+  "type": "module",
   "devDependencies": {
+    "chai": "^5.1.1",
+    "mocha": "^10.7.3",
     "nodemon": "^3.1.4"
   },
   "name": "backend",
   "version": "1.0.0",
   "main": "app.js",
   "scripts": {
+    "test": "mocha",
     "start": "NODE_ENV=production MONGO_USER=Elshirbini MONGO_PASSWORD=Aa5527980098 MONGO_DEFAULT_DATABASE=messages STRIPE_KEY=sk_test_51PgrgtRsEvCMHh13IkNetT7yQyT12Xw3t2mpWo2asF4znYV1vIomkCp6dn0ebkrlZ9PSer8sCTGbzQvHJmYIEMz600BX8Pa13R node app.js",
     "start:dev": "nodemon app.js"
   },

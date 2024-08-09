@@ -14,7 +14,8 @@ class SinglePost extends Component {
 
   componentDidMount() {
     const postId = this.props.match.params.postId;
-    fetch("https://mern-project-api-orcin.vercel.app/feed/post/" + postId, {
+    // fetch("https://mern-project-api-orcin.vercel.app/feed/post/" + postId, {
+    fetch("http://localhost:8080/feed/post/" + postId, {
       headers: {
         Authorization: "Bearer " + this.props.token,
       },
@@ -29,7 +30,8 @@ class SinglePost extends Component {
         this.setState({
           title: resData.post.title,
           author: resData.post.creator.name,
-          image: "https://mern-project-api-orcin.vercel.app/" + resData.post.imageUrl,
+          // image: "https://mern-project-api-orcin.vercel.app/" + resData.post.imageUrl,
+          image: "http://localhost:8080/" + resData.post.imageUrl,
           date: new Date(resData.post.createdAt).toLocaleDateString("en-US"),
           content: resData.post.content,
         });
