@@ -1,3 +1,5 @@
+const dotenv = require("dotenv");
+dotenv.config();
 const express = require("express");
 const path = require("path");
 const bodyParser = require("body-parser");
@@ -5,8 +7,8 @@ const multer = require("multer");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const compression = require("compression");
-const feedRoutes = require("./routes/feed");
 const authRoutes = require("./routes/auth");
+const feedRoutes = require("./routes/feed");
 
 const app = express();
 const fileStorage = multer.diskStorage({
@@ -62,10 +64,10 @@ app.use((error, req, res, next) => {
 
 mongoose
   .connect(
-    `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@cluster0.ufoahrq.mongodb.net/messages?retryWrites=true&w=majority&appName=Cluster0`
+    `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@cluster0.ufoahrq.mongodb.net/${process.env.MONGO_DEFAULT_DATABASE}?retryWrites=true&w=majority&appName=Cluster0`
   )
   .then((result) => {
-    const server = app.listen(process.env.PORT ||8080);
+    const server = app.listen(process.env.PORT || 8080);
     const io = require("./socket").init(server);
     io.on("connect", (socket) => {
       console.log("Client Connected");
