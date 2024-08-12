@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 
-function authMiddleware(req, res, next) {
+const authMiddleware = (req, res, next) =>  {
   const authHeader = req.get("Authorization");
   if (!authHeader) {
     const error = new Error("Not authenticated!");
