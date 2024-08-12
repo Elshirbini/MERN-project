@@ -1,11 +1,33 @@
 import { expect } from "chai";
-import jwt from "jsonwebtoken";
 import Sinon from "sinon";
 import User from "../models/user.js";
 import authController from "../controllers/auth.js";
 import mongoose from "mongoose";
 
-describe("Auth Controller - Login", () => {
+
+describe("Auth Controller", () => {
+
+    before((done) => {
+        mongoose
+        .connect(
+            `mongodb+srv://Elshirbini:Aa5527980098@cluster0.ufoahrq.mongodb.net/test-messages?retryWrites=true&w=majority&appName=Cluster0`
+        )
+        .then((result) => {
+          const user = new User({
+            email: "test@test.com",
+            password: "testtest",
+            name: "tester",
+            posts: [],
+            _id : '5c0f66b979af55031b34728a'
+          });
+          return user.save();
+        }).then(() => {
+            done()
+        })
+        .catch(err => console.log(err))
+
+    })
+
   it("Should throw an error with code 500 if accessing the database fails", (done) => {
     Sinon.stub(User, "findOne");
     User.findOne.throws();
@@ -19,7 +41,6 @@ describe("Auth Controller - Login", () => {
     authController
       .login(req, {}, () => {})
       .then((result) => {
-        console.log(result);
         expect(result).to.be.an("error");
         expect(result).to.have.property("statusCode", 500);
         done();
@@ -29,19 +50,31 @@ describe("Auth Controller - Login", () => {
   });
 
   it("Should send a response with a valid user status for an existing user", (done) => {
-    mongoose
-      .connect(
-        `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@cluster0.ufoahrq.mongodb.net/test-messages?retryWrites=true&w=majority&appName=Cluster0`
-      )
-      .then((result) => {
-        const user = new User({
-          email: "test@test.com",
-          password: "testtest",
-          name: "tester",
-          posts: [],
-        });
-        return user.save();
-      })
-      .then(() => {}).catch(err => console.log(err))
-  });
+        const req = {userId : '5c0f66b979af55031b34728a'}
+        const res = {
+            statusCode : 500,
+            userStatus : null,
+            status : function(code) {
+                this.statusCode = code
+                return this
+            },
+            json : function(data) {
+                this.userStatus = data.status
+            }
+        }
+        authController.getStatus(req,res,()=> {}).then(() => {
+            expect(res.statusCode).to.be.equal(200)
+            expect(res.userStatus).to.be.equal("I'am new !")
+            done()
+        })
+        .catch(err => console.log(err))
+    });
+    
+    after((done) => {
+        User.deleteMany({}).then(() => {
+            return mongoose.disconnect()
+        }).then(() => {
+            done()
+        })
+  })
 });
