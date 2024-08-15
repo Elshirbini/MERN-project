@@ -1,12 +1,19 @@
-const express = require("express");
-const { body } = require("express-validator");
+import express from "express";
 
-const feedController = require("../controllers/feed");
-const { authMiddleware } = require("../middleware/is-Auth");
+import { body } from "express-validator";
+
+import {
+  getPosts,
+  createPost,
+  getPost,
+  updatePost,
+  deletePost,
+} from "../controllers/feed.js";
+import { authMiddleware } from "../middleware/is-Auth.js";
 
 const router = express.Router();
 
-router.get("/posts", authMiddleware, feedController.getPosts);
+router.get("/posts", authMiddleware, getPosts);
 
 router.post(
   "/post",
@@ -15,10 +22,10 @@ router.post(
     body("title").trim().isLength({ min: 5 }),
     body("content").trim().isLength({ min: 5 }),
   ],
-  feedController.createPost
+  createPost
 );
 
-router.get("/post/:postId", authMiddleware, feedController.getPost);
+router.get("/post/:postId", authMiddleware, getPost);
 
 router.put(
   "/post/:postId",
@@ -27,9 +34,9 @@ router.put(
     body("title").trim().isLength({ min: 5 }),
     body("content").trim().isLength({ min: 5 }),
   ],
-  feedController.updatePost
+  updatePost
 );
 
-router.delete("/post/:postId", authMiddleware, feedController.deletePost);
+router.delete("/post/:postId", authMiddleware, deletePost);
 
-module.exports = router;
+export default router;

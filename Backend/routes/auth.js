@@ -1,31 +1,38 @@
-const express = require("express");
+import express from "express";
 const router = express.Router();
-const authController = require('../controllers/auth');
-const User = require("../models/user");
-const { body } = require("express-validator");
-const { authMiddleware } = require("../middleware/is-Auth");
 
+import { signup, login, getStatus, updateStatus } from "../controllers/auth.js";
 
-router.put("/signup", [
-  body("email")
-    .isEmail()
-    .withMessage("Please enter a valid email")
-    .custom((value, { req }) => {
-      return User.findOne({ email: value }).then((userDoc) => {
-        if (userDoc) {
-          return Promise.reject("This E-mail address has been exist");
-        }
-      });
-    }).normalizeEmail(),
-  body("password").trim().isLength({ min: 5 }),
-  body("name").trim().not().isEmpty(),
-] , authController.signup );
+import { User } from "../models/user.js";
 
-router.post('/login'  , authController.login);
+import { body } from "express-validator";
 
-router.get('/status', authMiddleware  , authController.getStatus)
+import { authMiddleware } from "../middleware/is-Auth.js";
 
-router.patch('/status', authMiddleware  , authController.updateStatus)
+router.put(
+  "/signup",
+  [
+    body("email")
+      .isEmail()
+      .withMessage("Please enter a valid email")
+      .custom((value, { req }) => {
+        return User.findOne({ email: value }).then((userDoc) => {
+          if (userDoc) {
+            return Promise.reject("This E-mail address has been exist");
+          }
+        });
+      })
+      .normalizeEmail(),
+    body("password").trim().isLength({ min: 5 }),
+    body("name").trim().not().isEmpty(),
+  ],
+  signup
+);
 
+router.post("/login", login);
 
-module.exports = router;
+router.get("/status", authMiddleware, getStatus);
+
+router.patch("/status", authMiddleware, updateStatus);
+
+export default router;

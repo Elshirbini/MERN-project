@@ -1,6 +1,6 @@
-const jwt = require("jsonwebtoken");
+import jwt from "jsonwebtoken";
 
-const authMiddleware = (req, res, next) =>  {
+export const authMiddleware = (req, res, next) => {
   const authHeader = req.get("Authorization");
   if (!authHeader) {
     const error = new Error("Not authenticated!");
@@ -23,6 +23,6 @@ const authMiddleware = (req, res, next) =>  {
   }
   req.userId = decodedToken.userId;
   next();
-}
+};
 
-module.exports = { authMiddleware };
+// module.exports = { authMiddleware };

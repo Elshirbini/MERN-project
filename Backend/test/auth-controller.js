@@ -1,7 +1,7 @@
 import { expect } from "chai";
 import Sinon from "sinon";
-import User from "../models/user.js";
-import authController from "../controllers/auth.js";
+import  { User }  from "../models/user.js";
+import {login , getStatus} from "../controllers/auth.js";
 import mongoose from "mongoose";
 
 
@@ -38,8 +38,8 @@ describe("Auth Controller", () => {
         password: "tester",
       },
     };
-    authController
-      .login(req, {}, () => {})
+    
+      login(req, {}, () => {})
       .then((result) => {
         expect(result).to.be.an("error");
         expect(result).to.have.property("statusCode", 500);
@@ -62,7 +62,7 @@ describe("Auth Controller", () => {
                 this.userStatus = data.status
             }
         }
-        authController.getStatus(req,res,()=> {}).then(() => {
+        getStatus(req,res,()=> {}).then(() => {
             expect(res.statusCode).to.be.equal(200)
             expect(res.userStatus).to.be.equal("I'am new !")
             done()

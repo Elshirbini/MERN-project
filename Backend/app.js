@@ -1,14 +1,28 @@
-const dotenv = require("dotenv");
+import dotenv from "dotenv";
 dotenv.config();
-const express = require("express");
-const path = require("path");
-const bodyParser = require("body-parser");
-const multer = require("multer");
-const mongoose = require("mongoose");
-const cors = require("cors");
-const compression = require("compression");
-const authRoutes = require("./routes/auth");
-const feedRoutes = require("./routes/feed");
+
+import express from "express";
+
+import path, { dirname } from "path";
+
+import bodyParser from "body-parser";
+
+import multer from "multer";
+
+import mongoose from "mongoose";
+
+import cors from "cors";
+
+import compression from "compression";
+
+import authRoutes from "./routes/auth.js";
+
+import feedRoutes from "./routes/feed.js";
+import { fileURLToPath } from "url";
+// import { IO } from './socket.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 const app = express();
 const fileStorage = multer.diskStorage({
@@ -50,7 +64,6 @@ app.use((req, res, next) => {
 });
 app.use(cors());
 app.use(compression());
-
 app.use("/feed", feedRoutes);
 app.use("/auth", authRoutes);
 
@@ -67,10 +80,11 @@ mongoose
     `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@cluster0.ufoahrq.mongodb.net/${process.env.MONGO_DEFAULT_DATABASE}?retryWrites=true&w=majority&appName=Cluster0`
   )
   .then((result) => {
-    const server = app.listen(process.env.PORT || 8080);
-    const io = require("./socket").init(server);
-    io.on("connect", (socket) => {
-      console.log("Client Connected");
+    app.listen(process.env.PORT || 8080, () => {
+      console.log("Connected");
     });
+    // IO.init(server).on("connect", (socket) => {
+    //   console.log("Client Connected");
+    // });
   })
   .catch((err) => console.log(err));

@@ -1,11 +1,17 @@
-const fs = require("fs");
-const path = require("path");
-const { validationResult } = require("express-validator");
-const io = require("../socket");
-const Post = require("../models/post");
-const User = require("../models/user");
+import fs from "fs";
 
-exports.getPosts = async (req, res, next) => {
+import { validationResult } from "express-validator";
+
+import { Post } from "../models/post.js";
+
+import { User } from "../models/user.js";
+import { fileURLToPath } from "url";
+import path, { dirname } from "path";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+export const getPosts = async (req, res, next) => {
   const currentPage = req.query.page || 1;
   const perPage = 2;
   try {
@@ -28,7 +34,7 @@ exports.getPosts = async (req, res, next) => {
   }
 };
 
-exports.createPost = async (req, res, next) => {
+export const createPost = async (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     const error = new Error("Validation failed, entered data is incorrect.");
@@ -53,16 +59,17 @@ exports.createPost = async (req, res, next) => {
     await post.save();
     const user = await User.findById(req.userId);
     user.posts.push(post);
-    await user.save();
-    io.getIO().emit("posts", {
-      action: "create",
-      post: { ...post._doc, creator: { _id: req.userId, name: user.name } },
-    });
+    const savedUser = await user.save();
+    // IO.getIO().emit("posts", {
+    //   action: "create",
+    //   post: { ...post._doc, creator: { _id: req.userId, name: user.name } },
+    // });
     res.status(201).json({
       message: "Post created successfully!",
       post: post,
       creator: { _id: user._id, name: user.name },
     });
+    return savedUser;
   } catch (err) {
     if (!err.statusCode) {
       err.statusCode = 500;
@@ -71,7 +78,7 @@ exports.createPost = async (req, res, next) => {
   }
 };
 
-exports.getPost = async (req, res, next) => {
+export const getPost = async (req, res, next) => {
   const postId = req.params.postId;
   try {
     const post = await Post.findById(postId);
@@ -89,7 +96,7 @@ exports.getPost = async (req, res, next) => {
   }
 };
 
-exports.updatePost = async (req, res, next) => {
+export const updatePost = async (req, res, next) => {
   const postId = req.params.postId;
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -132,10 +139,10 @@ exports.updatePost = async (req, res, next) => {
     post.imageUrl = imageUrl;
 
     await post.save();
-    io.getIO().emit("posts", {
-      action: "update",
-      post: post,
-    });
+    // IO.getIO().emit("posts", {
+    //   action: "update",
+    //   post: post,
+    // });
     res.status(200).json({
       message: "Updated Successfully",
       post: post,
@@ -148,7 +155,7 @@ exports.updatePost = async (req, res, next) => {
   }
 };
 
-exports.deletePost = async (req, res, next) => {
+export const deletePost = async (req, res, next) => {
   const postId = req.params.postId;
   try {
     const post = await Post.findById(postId);
@@ -168,10 +175,10 @@ exports.deletePost = async (req, res, next) => {
     const user = await User.findById(req.userId);
     user.posts.pull(postId);
     await user.save();
-    io.getIO().emit("posts", {
-      action: "delete",
-      post: postId,
-    });
+    // IO.getIO().emit("posts", {
+    //   action: "delete",
+    //   post: postId,
+    // });
     res.status(200).json({
       message: "Deleted Successfully",
     });

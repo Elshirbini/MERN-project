@@ -1,9 +1,12 @@
-const { validationResult } = require("express-validator");
-const User = require("../models/user");
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
+import { validationResult } from "express-validator";
 
-exports.signup = async (req, res, next) => {
+import { User } from "../models/user.js";
+
+import bcrypt from "bcryptjs";
+
+import jwt from "jsonwebtoken";
+
+export const signup = async (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     const error = new Error("Validation failed");
@@ -32,7 +35,7 @@ exports.signup = async (req, res, next) => {
   }
 };
 
-exports.login = async (req, res, next) => {
+export const login = async (req, res, next) => {
   const email = req.body.email;
   const password = req.body.password;
   try {
@@ -64,7 +67,7 @@ exports.login = async (req, res, next) => {
   }
 };
 
-exports.getStatus = async (req, res, next) => {
+export const getStatus = async (req, res, next) => {
   try {
     const user = await User.findById(req.userId);
     if (!user) {
@@ -81,7 +84,7 @@ exports.getStatus = async (req, res, next) => {
   }
 };
 
-exports.updateStatus = async (req, res, next) => {
+export const updateStatus = async (req, res, next) => {
   const newStatus = req.body.status;
   try {
     const user = await User.findById(req.userId);
