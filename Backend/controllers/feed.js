@@ -125,7 +125,6 @@ export const updatePost = async (req, res, next) => {
       throw error;
     }
     if (post.creator._id.toString() !== req.userId) {
-      console.log(post.creator._id);
       const error = new Error("Not Authorization");
       error.statusCode = 403;
       throw error;
@@ -165,7 +164,6 @@ export const deletePost = async (req, res, next) => {
       throw error;
     }
     if (post.creator.toString() !== req.userId) {
-      console.log(post.creator);
       const error = new Error("Not Authorization");
       error.statusCode = 403;
       throw error;
